@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const playerSchema = new mongoose.schema({
+const playerSchema = new mongoose.Schema({
     common_name: {
         type: String,
         required: true
