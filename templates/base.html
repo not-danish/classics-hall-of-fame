@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/main.css') }}">
+    <title>Danish Siddiqui - Data Scientist</title>
+</head>
+
+
+<nav class="bg-transparent py-4 fixed top-0 w-full z-50 left-0">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-6">
+      <!-- Logo -->
+      <a href="/" class="text-[#FDFFFC] hover:text-[#fb8b24] text-lg font-semibold">Football Classics</a>
+      
+      <!-- Menu items -->
+      <ul class="flex space-x-4">
+        <li>
+            <a href="/" class="text-[#FDFFFC] hover:text-[#5F0F40] transition duration-300 ease-in-out">Home</a>
+        </li>
+        <li>
+          <a href="/experience" class="text-[#FDFFFC] hover:text-[#5F0F40] transition duration-300 ease-in-out">Player Comparison</a>
+        </li>
+        <li>
+          <a href="/projects" class="text-[#FDFFFC] hover:text-[#5F0F40] transition duration-300 ease-in-out">Hall of Fame</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+    {% block header_content %} {% endblock %}
+<body id="body" class="bg-gradient-to-r from-[#5f0f40] to-[#fb8b24] text-[#E3D8F1] py-12 px-6 relative ">
+    
+{% block body_content %} {% endblock %}
+</body>
+
+<footer class="bg-transparent fixed bottom-0 w-full text-sm text-center py-2">
+    Curious about how I used Flask to make this website? Click <a class = "hover:text-[#5f0f40]"href="https://github.com/not-danish/portfolio-website">here</a>!
+</footer>
+
+</html>
