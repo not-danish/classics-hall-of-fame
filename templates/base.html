@@ -1,41 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/main.css') }}">
-    <title>Danish Siddiqui - Data Scientist</title>
+    <title>Football Player Comparison</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+    </style>
 </head>
 
+<body class="bg-gray-100 font-roboto">
+    <nav class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-2xl font-bold">Football Player Comparison</div>
+            <ul class="flex space-x-4">
+                <li><a href="#" class="hover:underline">Home</a></li>
+                <li><a href="#" class="hover:underline">About</a></li>
+                <li><a href="#" class="hover:underline">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
 
-<nav class="bg-transparent py-4 fixed top-0 w-full z-50 left-0">
-    <div class="max-w-6xl mx-auto flex items-center justify-between px-6">
-      <!-- Logo -->
-      <a href="/" class="text-[#FDFFFC] hover:text-[#fb8b24] text-lg font-semibold">Football Classics</a>
-      
-      <!-- Menu items -->
-      <ul class="flex space-x-4">
-        <li>
-            <a href="/" class="text-[#FDFFFC] hover:text-[#5F0F40] transition duration-300 ease-in-out">Home</a>
-        </li>
-        <li>
-          <a href="/experience" class="text-[#FDFFFC] hover:text-[#5F0F40] transition duration-300 ease-in-out">Player Comparison</a>
-        </li>
-        <li>
-          <a href="/projects" class="text-[#FDFFFC] hover:text-[#5F0F40] transition duration-300 ease-in-out">Hall of Fame</a>
-        </li>
-      </ul>
+    <div class="container mx-auto mt-8">
+        <h1 class="text-3xl font-bold mb-4">Welcome to Football Player Comparison</h1>
+        <p class="text-lg mb-8">Compare two football players and vote for who you think is better!</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="border p-4 rounded-md bg-white shadow-md flex items-center justify-center space-x-4">
+                <!-- First Player -->
+                <div class="w-16 h-16 bg-gray-300 rounded-full"></div>
+                <div>
+                    <h2 class="text-xl font-bold">Player 1</h2>
+                    <p class="text-gray-600">Position: Position</p>
+                </div>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600">Vote</button>
+            </div>
+
+            <div class="border p-4 rounded-md bg-white shadow-md flex items-center justify-center space-x-4">
+                <!-- Second Player -->
+                <div class="w-16 h-16 bg-gray-300 rounded-full"></div>
+                <div>
+                    <h2 class="text-xl font-bold">Player 2</h2>
+                    <p class="text-gray-600">Position: Position</p>
+                </div>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600">Vote</button>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold mt-8">Hall of Fame</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-4">
+            <!-- Hall of Fame Players -->
+            <div class="border p-4 rounded-md bg-white shadow-md">
+                <div class="w-20 h-20 bg-gray-300 rounded-full mx-auto mb-4"></div>
+                <h3 class="text-lg font-bold">Player Name</h3>
+                <p class="text-gray-600">Rank: #1</p>
+            </div>
+            <div class="border p-4 rounded-md bg-white shadow-md">
+                <div class="w-20 h-20 bg-gray-300 rounded-full mx-auto mb-4"></div>
+                <h3 class="text-lg font-bold">Player Name</h3>
+                <p class="text-gray-600">Rank: #2</p>
+            </div>
+            <div class="border p-4 rounded-md bg-white shadow-md">
+                <div class="w-20 h-20 bg-gray-300 rounded-full mx-auto mb-4"></div>
+                <h3 class="text-lg font-bold">Player Name</h3>
+                <p class="text-gray-600">Rank: #3</p>
+            </div>
+        </div>
+        <div class="text-center mt-8">
+            <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600">View All Players</a>
+        </div>
     </div>
-  </nav>
-
-    {% block header_content %} {% endblock %}
-<body id="body" class="bg-gradient-to-r from-[#5f0f40] to-[#fb8b24] text-[#E3D8F1] py-12 px-6 relative ">
-    
-{% block body_content %} {% endblock %}
 </body>
-
-<footer class="bg-transparent fixed bottom-0 w-full text-sm text-center py-2">
-    Curious about how I used Flask to make this website? Click <a class = "hover:text-[#5f0f40]"href="https://github.com/not-danish/portfolio-website">here</a>!
-</footer>
 
 </html>
