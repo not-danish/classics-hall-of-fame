@@ -4,74 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Football Player Comparison</title>
+    <title>Home</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        .hover-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: black;
+            mix-blend-mode: difference;
+            position: absolute;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+        }
     </style>
 </head>
 
-<body class="bg-[#002962] font-roboto">
-    <nav class="bg-[#002962] text-white py-4">
+<body class="font-sans">
+    <!-- Navigation bar -->
+    <nav class="bg-royal-blue text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
-            <div class="text-2xl font-bold">Football Player Comparison</div>
+            <div class="text-xl font-semibold">Your Website</div>
             <ul class="flex space-x-4">
-                <li><a href="#" class="hover:underline">Home</a></li>
-                <li><a href="#" class="hover:underline">About</a></li>
-                <li><a href="#" class="hover:underline">Contact</a></li>
+                <li><a href="#" class="hover:text-gray-300">Home</a></li>
+                <li><a href="#" class="hover:text-gray-300">About</a></li>
+                <li><a href="#" class="hover:text-gray-300">Services</a></li>
+                <li><a href="#" class="hover:text-gray-300">Contact</a></li>
             </ul>
         </div>
     </nav>
 
-    <div class="container mx-auto mt-8">
-        <h1 class="text-3xl font-bold mb-4">Welcome to Football Player Comparison</h1>
-        <p class="text-lg mb-8">Compare two football players and vote for who you think is better!</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="border p-4 rounded-md bg-white shadow-md flex items-center justify-center space-x-4">
-                <!-- First Player -->
-                <div class="w-16 h-16 bg-gray-300 rounded-full"></div>
-                <div>
-                    <h2 class="text-xl font-bold">Player 1</h2>
-                    <p class="text-gray-600">Position: Position</p>
-                </div>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600">Vote</button>
+    <!-- Hero section -->
+    <section class="bg-royal-blue text-white py-24 relative">
+        <div class="container mx-auto flex items-center relative">
+            <div class="flex-1">
+                <h1 class="text-4xl font-bold">Welcome to Your Website</h1>
+                <p class="text-lg mt-4">Your catchy and prominent subtitle goes here</p>
+                <button class="mt-6 px-6 py-3 bg-white text-blue-900 font-semibold rounded-full hover:bg-blue-100 transition duration-300">Get Started</button>
             </div>
-
-            <div class="border p-4 rounded-md bg-white shadow-md flex items-center justify-center space-x-4">
-                <!-- Second Player -->
-                <div class="w-16 h-16 bg-gray-300 rounded-full"></div>
-                <div>
-                    <h2 class="text-xl font-bold">Player 2</h2>
-                    <p class="text-gray-600">Position: Position</p>
-                </div>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600">Vote</button>
+            <div class="flex-1 hidden lg:block relative">
+                <div id="imageOverlay" class="absolute inset-0 bg-black opacity-0"></div>
+                <img src="https://www.footyrenders.com/render/bruno-fernandes-43.png" alt="Background Image" class="opacity-50">
+                <div id="hoverCircle" class="hover-circle"></div>
             </div>
         </div>
-
-        <h2 class="text-2xl font-bold mt-8">Hall of Fame</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-4">
-            <!-- Hall of Fame Players -->
-            <div class="border p-4 rounded-md bg-white shadow-md">
-                <div class="w-20 h-20 bg-gray-300 rounded-full mx-auto mb-4"></div>
-                <h3 class="text-lg font-bold">Player Name</h3>
-                <p class="text-gray-600">Rank: #1</p>
-            </div>
-            <div class="border p-4 rounded-md bg-white shadow-md">
-                <div class="w-20 h-20 bg-gray-300 rounded-full mx-auto mb-4"></div>
-                <h3 class="text-lg font-bold">Player Name</h3>
-                <p class="text-gray-600">Rank: #2</p>
-            </div>
-            <div class="border p-4 rounded-md bg-white shadow-md">
-                <div class="w-20 h-20 bg-gray-300 rounded-full mx-auto mb-4"></div>
-                <h3 class="text-lg font-bold">Player Name</h3>
-                <p class="text-gray-600">Rank: #3</p>
-            </div>
-        </div>
-        <div class="text-center mt-8">
-            <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600">View All Players</a>
-        </div>
-    </div>
+    </section>
 </body>
 
 </html>
