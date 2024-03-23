@@ -21,17 +21,20 @@ firebase_db = db.reference()
 app = Flask(__name__)
 
 
-def get_data_from_firebase():
+def get_data_from_firebase(id):
     # Example: Read data from Firebase
     data = firebase_db.get()
-    return data[3]
-
-print(get_data_from_firebase())
+    return data[id]
 
 @app.route('/')
 def index():
-    random_numbers = random.sample(range(start_range, end_range + 1), 2)
-    return render_template("index.html")
+    random_numbers = random.sample(range(0, 11059 + 1), 2)
+    player_1 = get_data_from_firebase(random_numbers[0])
+    player_2 = get_data_from_firebase(random_numbers[1])
+
+    return render_template("index.html", 
+                           player_1 = player_1,
+                           player_2 = player_2)
 
 @app.route('/leaderboard')
 def leaderboard():
