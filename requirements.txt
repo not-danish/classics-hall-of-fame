@@ -22,4 +22,5 @@ MarkupSafe==2.1.5
 packaging==23.2
 Werkzeug==3.0.1
 firebase-admin==6.5.0
+python-dotenv==1.0.1
 
