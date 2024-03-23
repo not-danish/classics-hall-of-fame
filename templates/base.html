@@ -7,49 +7,58 @@
     <title>Home</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
-    <style>
-        .hover-circle {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-color: black;
-            mix-blend-mode: difference;
-            position: absolute;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-        }
-    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400&display=swap">
 </head>
 
-<body class="font-sans">
-    <!-- Navigation bar -->
-    <nav class="bg-royal-blue text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="text-xl font-semibold">Your Website</div>
-            <ul class="flex space-x-4">
-                <li><a href="#" class="hover:text-gray-300">Home</a></li>
-                <li><a href="#" class="hover:text-gray-300">About</a></li>
-                <li><a href="#" class="hover:text-gray-300">Services</a></li>
-                <li><a href="#" class="hover:text-gray-300">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+<body class="font-oswald font-normal">
+    <header class="bg-royal-blue relative">
+        <!-- Navigation bar -->
+        <nav class="bg-transparent text-white p-4 absolute top-0 left-0 right-0 z-10">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="text-xl font-semibold">Your Website</div>
+                <ul class="flex space-x-4">
+                    <li><a href="#" class="hover:text-gray-300">Home</a></li>
+                    <li><a href="#" class="hover:text-gray-300">About</a></li>
+                    <li><a href="#" class="hover:text-gray-300">Rank Players</a></li>
+                    <li><a href="#" class="hover:text-gray-300">Leaderboard</a></li>
+                </ul>
+            </div>
+        </nav>
 
-    <!-- Hero section -->
-    <section class="bg-royal-blue text-white py-24 relative">
-        <div class="container mx-auto flex items-center relative">
-            <div class="flex-1">
-                <h1 class="text-4xl font-bold">Welcome to Your Website</h1>
-                <p class="text-lg mt-4">Your catchy and prominent subtitle goes here</p>
-                <button class="mt-6 px-6 py-3 bg-white text-blue-900 font-semibold rounded-full hover:bg-blue-100 transition duration-300">Get Started</button>
-            </div>
-            <div class="flex-1 hidden lg:block relative">
-                <div id="imageOverlay" class="absolute inset-0 bg-black opacity-0"></div>
-                <img src="https://www.footyrenders.com/render/bruno-fernandes-43.png" alt="Background Image" class="opacity-50">
-                <div id="hoverCircle" class="hover-circle"></div>
-            </div>
+        <!-- Background video section -->
+        <div class="snap-container">
+            <section class="snap-section h-screen relative bg-royal-blue">
+                <video autoplay muted loop class="absolute inset-0 object-cover w-full h-full opacity-20">
+                    <source src="https://ucf47e39647364bda3daa1ceff8b.dl.dropboxusercontent.com/cd/0/inline/CPpn8lPcb_usbsGrobXuVk2r5HA936eQSBJVWsthgXgn2No89O7cTr961fjLP0yK3Kisw7SV_T8AYkmoC2NCzkLwFAZd2VnA23B2hCHYA_4wjg6vmGtjIGIVV0Ge9iyYKcsrfySFLANaR5TWnvgeYXHY/file#" type="video/mp4">
+                    <!-- Add additional source elements for other video formats if needed -->
+                    Your browser does not support the video tag.
+                </video>
+
+                <div class="w-screen h-screen relative sm:text-center sm:justify-center">
+                    <div class="text-white text-left h-screen w-full flex flex-col items-start justify-center pl-8">
+                        <h1 class="md:text-4xl lg:text-7xl 2xl:text-8xl">DISCOVER THE TOP FOOTBALL PLAYERS <br>WORLDWIDE</h1>
+                        <p class="font-oswald font-thin text-3xl mt-5 mb-10 ml-2">As Ranked by You </p>
+                        <button id="scrollToNext" class="font-thin bg-green-400 text-royal-blue py-2 px-4 rounded-3xl mt-10">Rank Players</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="snap-section h-screen relative bg-royal-blue">
+                <!-- Content for the next section goes here -->
+            </section>
+
+            <!-- Add more snap-sections as needed -->
         </div>
-    </section>
+    </header>
+
+    <script>
+        document.getElementById('scrollToNext').addEventListener('click', function() {
+            const nextSection = document.querySelector('.snap-section:nth-child(2)');
+            if (nextSection) {
+                nextSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
 </body>
 
 </html>
