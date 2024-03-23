@@ -30,6 +30,7 @@ print(get_data_from_firebase())
 
 @app.route('/')
 def index():
+    random_numbers = random.sample(range(start_range, end_range + 1), 2)
     return render_template("index.html")
 
 @app.route('/leaderboard')
