@@ -8,11 +8,12 @@ module.exports = {
       }
     },
     fontFamily: {
-      oswald: ['Oswald']
+      overpass: ['Overpass', 'sans-serif'],
     },
     fontWeight: {
       normal: 400,
-      thin: 200
+      thin: 200,
+      bold: 500
     }
   },
   plugins: [],

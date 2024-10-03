@@ -1,1 +1,35 @@
 {% extends "base.html" %}
+
+{% block home_content %}
+<video autoplay muted loop class="absolute inset-0 object-cover w-full h-full opacity-20">
+    <source src="https://www.dropbox.com/scl/fi/n29t54jyexki2zfsh1uj1/header-vid.mp4?rlkey=8ntaqh6ikoo79izh8jyennynn&raw=1" type="video/mp4">
+    <!-- Add additional source elements for other video formats if needed -->
+    Your browser does not support the video tag.
+</video>
+
+<div class="w-screen h-screen relative sm:text-center sm:justify-center">
+    <div class="text-white text-left h-screen w-full flex flex-col items-start justify-center pl-8">
+        <h1 class="md:text-4xl lg:text-7xl 2xl:text-8xl">DISCOVER THE TOP FOOTBALL PLAYERS <br>WORLDWIDE</h1>
+        <p class="font-oswald font-thin text-3xl mt-5 mb-10 ml-2">As Ranked by You </p>
+        <button id="scrollToNext" class="font-thin bg-green-400 text-royal-blue py-2 px-4 rounded-3xl mt-10">Rank Players</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block ranking_section %}
+{% include "components/tab_component.html" %}
+{% endblock %}
+
+{% block nav %}
+<nav class="bg-transparent text-white p-4 absolute top-0 left-0 right-0 z-10">
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="text-xl font-semibold">Footy Classics</div>
+        <ul class="flex space-x-4">
+            <li><a href="#" class="hover:text-gray-300">Home</a></li>
+            <li><a href="#" class="hover:text-gray-300">About</a></li>
+            <li><a href="#" class="hover:text-gray-300">Rank Players</a></li>
+            <li><a href="#" class="hover:text-gray-300">Leaderboard</a></li>
+        </ul>
+    </div>
+</nav>
+{% endblock %}
