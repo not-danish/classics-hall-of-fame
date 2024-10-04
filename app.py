@@ -63,7 +63,7 @@ def new_player():
 
     return jsonify(get_data_from_firebase(random_id))
 
-def fetch_players_by_elo(min_elo, max_elo, limit=100):
+def fetch_players_by_elo(min_elo, max_elo, limit=50):
     players_ref = db.reference('data/players')
     players_data = players_ref.order_by_child('ELO').start_at(min_elo).end_at(max_elo).limit_to_last(limit).get()
 
@@ -73,6 +73,7 @@ def fetch_players_by_elo(min_elo, max_elo, limit=100):
 
     return sorted_players[:limit]  # Return the top N players
 
+#---------------------------------------------------------
 
 @app.route('/api/leaderboard')
 def test():
@@ -133,6 +134,6 @@ def leaderboard():
 
 
 app.run(
-    host="0.0.0.0", port=5000
-    #debug = True, port = 3000
+    #host="0.0.0.0", port=5000
+    debug = True, port = 3000
         )
