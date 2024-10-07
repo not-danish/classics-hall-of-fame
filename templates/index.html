@@ -13,9 +13,9 @@
             
             <div class="w-screen h-screen relative sm:text-center sm:justify-center">
                 <div class="text-white text-left h-screen w-full flex flex-col items-start justify-center pl-8">
-                    <h1 class="md:text-4xl lg:text-7xl 2xl:text-8xl">DISCOVER THE TOP FOOTBALL PLAYERS <br>WORLDWIDE</h1>
-                    <p class="font-oswald font-thin text-3xl mt-5 mb-10 ml-2">As Ranked by You </p>
-                    <button id="scrollToNext" class="font-thin bg-green-400 text-royal-blue py-2 px-4 rounded-3xl mt-10">Rank Players</button>
+                    <h1 class="md:text-4xl lg:text-7xl 2xl:text-8xl animate__animated animate__fadeInLeft animate__slower">DISCOVER THE TOP FOOTBALL PLAYERS <br>WORLDWIDE</h1>
+                    <p class="font-thin text-3xl mt-5 mb-10 ml-2 animate__animated animate__fadeInLeft animate__slower animate__delay-1s">As Ranked by You </p>
+                    <button id="scrollToNext" class="font-thin bg-green-400 text-royal-blue py-2 px-4 rounded-3xl mt-10 animate__animated animate__fadeInUp animate__slower animate__delay-2s">Rank Players</button>
                 </div>
             </div>
         </section>
@@ -93,6 +93,6 @@
         <!-- Add more snap-sections as needed -->
 
         <section class="snap-section h-screen flex justify-center items-center bg-gradient-to-b from-royal-blue to-[#3A6EA5]">
-            {% include "components/tab_component.html" %}     
+            {% include "components/tab_component.html" %} {% endblock %}
         </section>
-{% endblock %}
+
