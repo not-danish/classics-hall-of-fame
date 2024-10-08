@@ -1,13 +1,13 @@
 from flask import Flask, render_template, jsonify, request
-from firebase_admin import credentials, db
+from firebase_admin import credentials, db, initialize_app
 from dotenv import load_dotenv
 import os
 import random
 import get_player_data as pd
-from flask import Flask, render_template, request, jsonify
-from firebase_admin import credentials, db, initialize_app
 import random
 import elo
+import time
+import threading
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -22,28 +22,86 @@ initialize_app(cred, {'databaseURL': os.getenv('DATABASE_URL')})
 # Get a reference to the Firebase Realtime Database
 firebase_db = db.reference()
 
-# Client-side caching dictionary
-player_cache = {}
+'''
+-------------------------------------
+# Cache
+------------------------------------
+'''
 
-def get_data_from_firebase(player_id):
+# Client-side caching dictionary with timer
+player_cache = {'data': {}, 
+                'time': None}
+cache_updates = {}
+cache_expiry_time = 300
+
+# Updates cache with new player data every 5 minutes
+def update_cache():
+    while True:
+        current_time = time.time()
+        print(current_time)
+        # Remove expired cache entries
+        if player_cache['time'] == None:
+            random_elo = random.randint(1300,1700)
+            player_cache['data'] = fetch_players_by_elo(random_elo - 50, random_elo + 50, limit = 50)
+            player_cache['time'] = current_time
+            print(player_cache)
+        else:
+            if current_time - player_cache['time'] > cache_expiry_time:
+                #firebase_db.update(cache_updates)
+                random_elo = random.randint(1300,1700)
+                player_cache['data'] = fetch_players_by_elo(random_elo - 50, random_elo + 50, limit = 50)
+                print('NEW PLAYERS!')
+                print(player_cache)
+        time.sleep(60)  # Check every minute
+
+threading.Thread(target=update_cache, daemon=True).start()
+
+
+'''
+-------------------------------------
+# Firebase Magic
+-------------------------------------
+'''
+
+def get_data_from_firebase(player_id, player_cache):
+    current_time = time.time()
+    
     # Check if player data is already cached
-    if player_id in player_cache:
+    if player_id in player_cache['data'] and (current_time - player_cache[player_id]['time']) < cache_expiry_time:
         return player_cache[player_id]
+    
+    if player_cache != {}:
+        firebase_db.update(cache_updates)
+        player_cache = {}
 
     # Fetch data from Firebase if not cached
     player_data = firebase_db.child('data/players').child(player_id).get()
 
     # Cache the fetched data
-    player_cache[player_id] = player_data
+    player_cache[player_id] = {'data': player_data,
+                               'time': current_time}
 
     return player_data
 
-def update_player_elo_to_firebase(player_id, new_elo):
-    player_cache[str(player_id)]['ELO'] = new_elo    
-    firebase_db.child('data/players').child(str(player_id)).update({'ELO': new_elo})
-    return True
+def fetch_players_by_elo(min_elo, max_elo, **kwargs):
+    limit = kwargs.get('limit', None)
+    players_ref = db.reference('data/players')
 
-#-----------------------------------------
+    if limit:
+        players_data = players_ref.order_by_child('ELO').start_at(min_elo).end_at(max_elo).limit_to_last(limit).get()
+    else:
+        players_data = players_ref.order_by_child('ELO').start_at(min_elo).end_at(max_elo).get()
+
+    # Convert to a list and sort it in descending order by ELO
+    sorted_players = sorted(players_data.items(), key=lambda x: x[1].get('ELO', 0), reverse=True)
+
+    return sorted_players[:limit]  # Return the top N players
+
+'''
+-------------------------------------
+# API Routes for the webpage
+-------------------------------------
+'''
 
     
 @app.route('/api/new_player', methods=['GET'])
@@ -61,23 +119,11 @@ def new_player():
     # Select a random player ID from the remaining IDs
     random_id = random.choice(all_player_ids)
 
-    return jsonify(get_data_from_firebase(random_id))
-
-def fetch_players_by_elo(min_elo, max_elo, limit=50):
-    players_ref = db.reference('data/players')
-    players_data = players_ref.order_by_child('ELO').start_at(min_elo).end_at(max_elo).limit_to_last(limit).get()
-
-    # Convert to a list and sort it in descending order by ELO
-    sorted_players = list(players_data.values())
-    sorted_players.sort(key=lambda x: x.get('ELO', 0), reverse=True)
-
-    return sorted_players[:limit]  # Return the top N players
-
-#---------------------------------------------------------
+    return jsonify(get_data_from_firebase(random_id, player_cache))
 
 @app.route('/api/leaderboard')
 def test():
-    return jsonify(fetch_players_by_elo(1401,1760))
+    return jsonify(fetch_players_by_elo(1401,1760, limit = 10))
 
 
 @app.route('/api/update_player', methods=['POST'])
@@ -112,17 +158,35 @@ def update_player():
 
     return jsonify({'Message': 'Done!', 'newEloWin': new_elo_win, 'tierChanged': tier_changed, 'tier': new_tier})
 
+'''
+--------------------------------------
+ Main routes for the webpage
+-------------------------------------- 
+'''
 
 @app.route('/')
-def index():
+def index():    
+    random_numbers = random.sample(range(0, 11059 + 1), 2)
+    player_1 = get_data_from_firebase(str(random_numbers[0]), player_cache)
+    player_2 = get_data_from_firebase(str(random_numbers[1]), player_cache)
+    player_1_data = pd.player_data(player_1['player_api_id'])
+    player_2_data = pd.player_data(player_1['player_api_id'])
+
+    return render_template("index.html",
+                           player_1 = player_1,
+                           player_2 = player_2,
+                           player_1_data = player_1_data,
+                           player_2_data = player_2_data)
+
+@app.route('/rank')
+def rank():
     random_numbers = random.sample(range(0, 11059 + 1), 2)
     player_1 = get_data_from_firebase(str(random_numbers[0]))
     player_2 = get_data_from_firebase(str(random_numbers[1]))
     player_1_data = pd.player_data(player_1['player_api_id'])
     player_2_data = pd.player_data(player_1['player_api_id'])
 
-    
-    return render_template("index.html",
+    return render_template("rank.html",
                            player_1 = player_1,
                            player_2 = player_2,
                            player_1_data = player_1_data,
