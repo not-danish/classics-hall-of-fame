@@ -3,10 +3,8 @@
 {% block header_content %}
 
     <!-- Background video section -->
-    <div class="snap-container">
-        <section class="snap-section h-screen relative bg-royal-blue">
-            <video autoplay muted loop class="absolute inset-0 object-cover w-full h-full opacity-20">
-                <source src="https://www.dropbox.com/scl/fi/n29t54jyexki2zfsh1uj1/header-vid.mp4?rlkey=8ntaqh6ikoo79izh8jyennynn&raw=1" type="video/mp4">
+    <video autoplay muted loop class="absolute inset-0 object-cover w-full h-full opacity-20">
+            <source src="https://www.dropbox.com/scl/fi/n29t54jyexki2zfsh1uj1/header-vid.mp4?rlkey=8ntaqh6ikoo79izh8jyennynn&raw=1" type="video/mp4">
                 <!-- Add additional source elements for other video formats if needed -->
                 Your browser does not support the video tag.
             </video>
@@ -18,81 +16,7 @@
                     <button id="scrollToNext" class="font-thin bg-green-400 text-royal-blue py-2 px-4 rounded-3xl mt-10 animate__animated animate__fadeInUp animate__slower animate__delay-2s">Rank Players</button>
                 </div>
             </div>
-        </section>
 
-        <section class="snap-section h-screen flex justify-center items-center bg-gradient-to-b from-royal-blue to-[#3A6EA5]">
+{% endblock %}
 
-            <div class="max-w-xl bg-blue-900 rounded-lg overflow-hidden shadow-lg p-6">
-                <h1 class="text-3xl font-bold text-center mb-6 text-white">Choose the Better Player</h1>
-                <div class="grid grid-cols-2 gap-2">
-                    <!-- Player 1 Card -->
-                    <div id="player1-card"class="relative rounded-lg overflow-hidden shadow-lg bg-blue-400 hover:bg-blue-500 transition duration-300 ease-in-out transform hover:scale-105">
-                        <img id="player_1_img" class="w-full h-64 object-cover" src="https://images.fotmob.com/image_resources/playerimages/{{player_1['player_api_id']}}.png" onerror="this.onerror=null; this.src='https://cdn.sofifa.net/player_0.svg'" alt="Player 1">
-                        <div class="p-4 text-royal-blue">
-                            <h2 id="player_1_name" class="text-xl font-semibold mb-2">{{player_1['player_name']}}</h2>
-                            <h2 id="player_1_position" class="text-xl font-semibold mb-2">{{player_1_data['positionDescription']['primaryPosition']['label']}}</h2>
-                            <p class="text-md">Rank:
-                                <span id="player_1_rank" class="text-xl">
-                                    {% if 0 <= player_1['ELO'] < 300 %} 🥉
-                                    {% elif 300 <= player_1['ELO'] < 600 %} 🥈
-                                    {% elif 600 <= player_1['ELO'] < 900 %} 🥈🥈
-                                    {% elif 900 <= player_1['ELO'] < 1200 %} 🥈🥈🥈
-                                    
-                                    {% elif 1200 <= player_1['ELO'] < 1500 %} 🥇
-                                    {% elif 1500 <= player_1['ELO'] < 1800 %} 🥇🥇
-
-                                    {% elif 1800 <= player_1['ELO'] < 2100 %} 🌟
-                                    {% elif 2100 <= player_1['ELO'] < 2400 %} 💎
-                                    {% elif 2400 <= player_1['ELO'] < 2700 %} 🔴
-                                    {% elif 2700 <= player_1['ELO'] < 3000 %} ♦️
-                                    {% elif 3000 <= player_1['ELO'] %} 🔮
-
-                                    {% endif %}
-                                </span>
-                            </p>
-
-                            <p class="text-sm" id="player_1_elo">{{player_1['ELO']}}</p>
-                            <button id="player_1" value="{{ player_1['id']}}" class="block w-full mt-4 bg-white text-blue-400 font-semibold py-2 rounded hover:bg-blue-200 transition duration-300 ease-in-out select-player-btn">Select Player 1</button>
-                        </div>
-                    </div>
-                    <!-- Player 2 Card -->
-                    <div id="player2-card" class="relative rounded-lg overflow-hidden shadow-lg bg-[#A30015] transition duration-300 ease-in-out transform hover:scale-105">
-                        <img id="player_2_img" class="w-full h-64 object-cover" src="https://images.fotmob.com/image_resources/playerimages/{{player_2['player_api_id']}}.png" onerror="this.onerror=null; this.src='https://cdn.sofifa.net/player_0.svg'" alt="Player 2">
-                        <div class="p-4 text-royal-blue">
-                            <h2 id="player_2_name" class="text-xl font-semibold mb-2">{{player_2['player_name']}}</h2>
-                            <h2 id="player_2_position" class="text-xl font-semibold mb-2">{{player_2_data['positionDescription']['primaryPosition']['label']}}</h2>
-                            <p class="text-sm">Rank:
-                                <span id="player_2_rank" class="text-xl">
-                                    {% if 0 <= player_2['ELO'] < 300 %} 🥉
-                                    {% elif 300 <= player_2['ELO'] < 600 %} 🥈
-                                    {% elif 600 <= player_2['ELO'] < 900 %} 🥈🥈
-                                    {% elif 900 <= player_2['ELO'] < 1200 %} 🥈🥈🥈
-                                    
-                                    {% elif 1200 <= player_2['ELO'] < 1500 %} 🥇
-                                    {% elif 1500 <= player_2['ELO'] < 1800 %} 🥇🥇
-
-                                    {% elif 1800 <= player_2['ELO'] < 2100 %} 🌟
-                                    {% elif 2100 <= player_2['ELO'] < 2400 %} 💎
-                                    {% elif 2400 <= player_2['ELO'] < 2700 %} 🔴
-                                    {% elif 2700 <= player_2['ELO'] < 3000 %} ♦️
-                                    {% elif 3000 <= player_2['ELO'] %} 🔮
-
-                                    {% endif %}</p>
-                                </span>
-                            <p class="text-sm" id="player_2_elo">{{player_2['ELO']}}</p>
-                            <button id="player_2" value="{{ player_2['id']}}" class="block w-full mt-4 bg-white text-green-400 font-semibold py-2 rounded hover:bg-green-200 transition duration-300 ease-in-out select-player-btn">Select Player 2</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            
-        </section>
-
-        <!-- Add more snap-sections as needed -->
-
-        <section class="snap-section h-screen flex justify-center items-center bg-gradient-to-b from-royal-blue to-[#3A6EA5]">
-            {% include "components/tab_component.html" %} {% endblock %}
-        </section>
 

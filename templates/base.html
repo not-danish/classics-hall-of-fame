@@ -15,9 +15,10 @@
     <header class="bg-royal-blue relative">
         <!-- Navigation bar -->
         {% include "components/nav.html" %}
-
-        {% block header_content %}
-        {% endblock %}        
+        <div class="h-screen relative bg-royal-blue">
+            {% block header_content %}
+            {% endblock %}   
+        </div>     
     </header>
 
     <script>
