@@ -1,1 +1,12 @@
 {% extends "base.html" %}
+
+
+{% block header_content %}
+    {% include "components/player_card.html" %}
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="{{url_for('static', filename='scripts/updateFirebase.js')}}"></script>
+    <script src="{{url_for('static', filename='scripts/playerData.js')}}"></script>
+{% endblock %}

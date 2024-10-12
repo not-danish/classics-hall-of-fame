@@ -21,17 +21,8 @@
         </div>     
     </header>
 
-    <script>
-        document.getElementById('scrollToNext').addEventListener('click', function() {
-            const nextSection = document.querySelector('.snap-section:nth-child(2)');
-            if (nextSection) {
-                nextSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    </script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="{{url_for('static', filename='scripts/updateFirebase.js')}}"></script>
+    {% block scripts %} {% endblock %}
 
 </body>
 

@@ -123,6 +123,7 @@ def new_elo():
     )
 
 
+
 '''
 --------------------------------------
  Main routes for the webpage
