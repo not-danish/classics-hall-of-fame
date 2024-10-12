@@ -31,105 +31,67 @@ async function getCachedPlayers() {
         do {
             secondIndex = Math.floor(Math.random() * cachedPlayers.length);
         } while (secondIndex === firstIndex);
-        
-        playerOneData = cachedPlayers[firstIndex];
-        playerTwoData = cachedPlayers[secondIndex];
+
+        playerData = [cachedPlayers[firstIndex], cachedPlayers[secondIndex]];
 
 
-        // Update Player 1
-        const player1ApiId = playerOneData[1]['player_api_id'];
-        const p1ImgSrc = `https://images.fotmob.com/image_resources/playerimages/${player1ApiId}.png`;
-        p1ImageElement.onerror = function () {
-                this.src = 'https://cdn.sofifa.net/player_0.svg'; // Set default image URL
-            };
-        p1ImageElement.src = p1ImgSrc;
+        for(var i=0; i<=1; i++){
+            const playerApiId = playerData[i][1]['player_api_id'];
+            const playerImgSrc = `https://images.fotmob.com/image_resources/playerimages/${playerApiId}.png`;
 
-        var p1Rank;
-        const p1ELO = playerOneData[1]['ELO']; 
+            var rank;
 
-        if (0 <= p1ELO && p1ELO < 300) {
-            p1Rank = '🥉';
-        } else if (300 <= p1ELO && p1ELO < 600) {
-            p1Rank = '🥈';
+            const elo = playerData[i][1]['ELO'];
+
+            if (0 <= elo && elo < 300) {
+                p1Rank = '🥉';
+            } else if (300 <= elo && elo < 600) {
+                p1Rank = '🥈';
+            }
+            else if(600 <= elo && elo < 900){
+                p1Rank = '🥈🥈';
+            }
+            else if(900 <= elo && elo  < 1200){
+                p1Rank = '🥈🥈🥈';
+            }            
+            else if(1200 <= elo && elo < 1500){
+                p1Rank = '🥇';
+            }            
+            else if(1500 <= elo && elo < 1800){
+                p1Rank = '🥇🥇';
+            }            
+            else if(1800 <= elo && elo < 2100){
+                p1Rank = '🌟';
+            }            
+            else if(2100 <= elo && elo < 2400){
+                p1Rank = '💎';
+            }            
+            else if(2400 <= elo && elo < 2700){
+                p1Rank = '🔴💎';
+            }            
+            else if(2700 <= elo && elo < 3000){
+                p1Rank = '⚫💎';
+            }            
+            else if(3000 <= elo){
+                p1Rank = '🔮';
+            }
+            
+            if(i === 0){
+                p1ImageElement.onerror = function () {
+                    this.src = 'https://cdn.sofifa.net/player_0.svg'; // Set default image URL
+                };
+                p1ImageElement.src = playerImgSrc;
+                p1Name.innerHTML = `${playerData[i][1]['player_name']} ${p1Rank}`;
+
+            }
+            else {
+                p2ImageElement.onerror = function () {
+                    this.src = 'https://cdn.sofifa.net/player_0.svg'; // Set default image URL
+                };
+                p2ImageElement.src = playerImgSrc;
+                p2Name.innerHTML = `${playerData[i][1]['player_name']} ${p1Rank}`;
+            }
         }
-        else if(600 <= p1ELO && p1ELO < 900){
-            p1Rank = '🥈🥈';
-        }
-        else if(900 <= p1ELO && p1ELO  < 1200){
-            p1Rank = '🥈🥈🥈';
-        }            
-        else if(1200 <= p1ELO && p1ELO < 1500){
-            p1Rank = '🥇';
-        }            
-        else if(1500 <= p1ELO && p1ELO < 1800){
-            p1Rank = '🥇🥇';
-        }            
-        else if(1800 <= p1ELO && p1ELO < 2100){
-            p1Rank = '🌟';
-        }            
-        else if(2100 <= p1ELO && p1ELO < 2400){
-            p1Rank = '💎';
-        }            
-        else if(2400 <= p1ELO && p1ELO < 2700){
-            p1Rank = '🔴💎';
-        }            
-        else if(2700 <= p1ELO && p1ELO < 3000){
-            p1Rank = '⚫💎';
-        }            
-        else if(3000 <= p1ELO){
-            p1Rank = '🔮';
-        }
-
-        p1Name.innerHTML = `${playerOneData[1]['player_name']} ${p1Rank}`;
-
-
-        // Update Player 2
-        const player2ApiId = playerTwoData[1]['player_api_id'];
-        const p2ImgSrc = `https://images.fotmob.com/image_resources/playerimages/${player2ApiId}.png`;
-        p2ImageElement.onerror = function () {
-                this.src = 'https://cdn.sofifa.net/player_0.svg'; // Set default image URL
-            };
-        p2ImageElement.src = p2ImgSrc;
-        
-        var p2Rank;
-        const p2ELO = playerOneData[1]['ELO']; 
-
-        if (0 <= p2ELO && p2ELO < 300) {
-            p2Rank = '🥉';
-        } else if (300 <= p2ELO && p2ELO < 600) {
-            p2Rank = '🥈';
-        }
-        else if(600 <= p2ELO && p2ELO < 900){
-            p2Rank = '🥈🥈';
-        }
-        else if(900 <= p2ELO && p2ELO  < 1200){
-            p2Rank = '🥈🥈🥈';
-        }            
-        else if(1200 <= p2ELO && p2ELO < 1500){
-            p2Rank = '🥇';
-        }            
-        else if(1500 <= p2ELO && p2ELO < 1800){
-            p2Rank = '🥇🥇';
-        }            
-        else if(1800 <= p2ELO && p2ELO < 2100){
-            p2Rank = '🌟';
-        }            
-        else if(2100 <= p2ELO && p2ELO < 2400){
-            p2Rank = '💎';
-        }            
-        else if(2400 <= p2ELO && p2ELO < 2700){
-            p2Rank = '🔴💎';
-        }            
-        else if(2700 <= p2ELO && p2ELO < 3000){
-            p2Rank = '⚫💎';
-        }            
-        else if(3000 <= p2ELO){
-            p2Rank = '🔮';
-        }
-
-        p2Name.innerHTML = `${playerTwoData[1]['player_name']} ${p2Rank}`;
-
-
 
         return [cachedPlayers[firstIndex], cachedPlayers[secondIndex]]
     }
