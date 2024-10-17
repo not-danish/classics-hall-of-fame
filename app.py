@@ -3,11 +3,12 @@ from firebase_admin import credentials, db, initialize_app
 from dotenv import load_dotenv
 import os
 import random
-import get_player_data as pd
 import random
 import elo
 import time
 import threading
+import requests
+import json
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -51,7 +52,8 @@ def fetch_players_by_elo(min_elo, max_elo, **kwargs):
 '''
 
 # Client-side caching dictionary with timer
-player_cache = {'data': {}, 
+player_cache = {'data': {},
+                'detailed_data': {}, 
                 'time': None}
 cache_updates = {}
 cache_expiry_time = 300
@@ -70,9 +72,12 @@ def update_cache():
                 #firebase_db.update(cache_updates)
                 random_elo = random.randint(1300,1700)
                 player_cache['data'] = fetch_players_by_elo(random_elo - 50, random_elo + 50, limit = 50)
+
         time.sleep(60)  # Check every minute
 
 threading.Thread(target=update_cache, daemon=True).start()
+
+
 
 
 '''
@@ -121,6 +126,15 @@ def new_elo():
           losing_player: { 'ELO': new_elo_loss }
         }
     )
+
+
+@app.route('/api/detailed_data')
+def detailed_data():
+    player_api_id = request.args.get('player_api_id')
+    data_link = f'https://www.fotmob.com/api/playerData?id={player_api_id}'
+    data = requests.get(data_link).text
+
+    return json.loads(data)
 
 
 
