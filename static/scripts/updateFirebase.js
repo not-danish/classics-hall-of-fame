@@ -82,8 +82,8 @@ async function getDetailedPlayer(api_id) {
             const playerImageElement = document.getElementById(`player_${i+1}_image`);
             const playerNameElement = document.getElementById(`player_${i+1}_name`);
             const playerCardElement = document.getElementById(`player_${i+1}_card`);
-            const statBoxesParent = document.getElementById(`player_${i+1}_stats`);
-            const statBoxesChildren = statBoxesParent.getElementsByTagName('div');
+            const playerPositionElement = document.getElementById(`player_${i+1}_position`);
+            const playerTeamElement = document.getElementById(`player_${i+1}_club`);
 
 
             // Getting Detailed Data and using it to work with 
@@ -98,16 +98,21 @@ async function getDetailedPlayer(api_id) {
                 this.src = 'https://cdn.sofifa.net/player_0.svg'; // Set default image URL
             }
             playerImageElement.src = playerImgSrc;
-            playerNameElement.innerHTML = `${playerData[i][1].player_name} ${rank}`;
+
+            playerNameElement.innerHTML = `${ithPlayer[1].player_name} ${rank}`;   
             playerNameElement.style.color = 'white';
             playerCardElement.style.backgroundColor = teamColour;
+
+            playerTeamElement.innerHTML = detailedData?.primaryTeam?.teamName || detailedData?.status;
+
+            playerPositionElement.innerHTML = detailedData?.positionDescription?.primaryPosition?.label || 'N/A'
 
 
             // onHover 
             playerCardElement.addEventListener('mouseover', () => {
                 playerCardElement.style.backgroundColor = awayColour;
                 playerCardElement.style.color = teamColour;
-                //playerCardElement.style.filter = "blur(3px)";
+                playerCardElement.style.filter = "blur(2px)";
 
             })
 
