@@ -3,11 +3,11 @@
 
 {% block header_content %}
     {% include "components/player_card.html" %}
-    {% include "components/past_ranks.html" %}
 {% endblock %}
 
 
 {% block scripts %}
-    <script src="{{url_for('static', filename='scripts/updateFirebase.js')}}"></script>
-    <script src="{{url_for('static', filename='scripts/playerData.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="{{url_for('static', filename='scripts/updateFirebase.js')}}"></script>
+    <script type="module" src="{{url_for('static', filename='scripts/playerData.js')}}"></script>
 {% endblock %}
