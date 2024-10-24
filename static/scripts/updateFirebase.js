@@ -37,7 +37,8 @@ async function displayPlayers() {
 
         for (var i = 0; i < 2; i++) {
             const ithPlayer = playerData[i];
-            const playerApiId = ithPlayer?.player_api_id || ithPlayer[1]?.player_api_id;
+            console.log(ithPlayer);
+            const playerApiId = ithPlayer[1]?.player_api_id;
             const playerImgSrc = `https://images.fotmob.com/image_resources/playerimages/${playerApiId}.png`;
 
             // Logic to display player rank
@@ -85,6 +86,17 @@ async function displayPlayers() {
             playerTeamElement.innerHTML = detailedData?.primaryTeam?.teamName || 'N/A';
             playerPositionElement.innerHTML = detailedData?.positionDescription?.primaryPosition?.label || 'N/A';
 
+            // Add click event listener to player card for POST request
+            playerCardElement.addEventListener('click', () => {
+                const dataToSend = {
+                    winning_id: ithPlayer[0],
+                    winning_elo: ithPlayer[1].ELO,
+                    losing_id: playerData[(i+1)%2][0],
+                    losing_elo: playerData[(i+1)%2][1].ELO
+                }
+                sendCacheUpdate(dataToSend);  // Call function to send POST request
+            });
+
             // onHover event listeners
             playerCardElement.addEventListener('mouseover', () => {
                 playerCardElement.style.backgroundColor = awayColour;
@@ -102,11 +114,29 @@ async function displayPlayers() {
 
         // After processing both players, display the charts with the same y-axis max value
         displayCharts(seasonDataForBothPlayers[0], seasonDataForBothPlayers[1], ['appearances', 'appearances']);
-        setupDropdownListeners(seasonDataForBothPlayers[0], seasonDataForBothPlayers[1], ['appearances','appearances']);
 
-
+        // Call setupDropdownListeners here after rendering the players and charts
+        setupDropdownListeners(seasonDataForBothPlayers[0], seasonDataForBothPlayers[1]);
 
         return [cachedPlayers[firstIndex], cachedPlayers[secondIndex]];
+    }
+}
+
+// Function to send POST request to /api/cache_updates
+async function sendCacheUpdate(dataToSend) {
+    try {
+        const response = await fetch('/api/update_data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        });
+
+        const result = await response.json();
+        console.log(result); // Log the response from the server
+    } catch (error) {
+        console.error('Error sending cache update:', error);
     }
 }
 

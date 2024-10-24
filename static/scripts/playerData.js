@@ -59,7 +59,11 @@ function updateChart(i, cardColor, seasonData, maxParam, param) {
         chartInstances[`chart_${i}`].data.datasets[0].borderColor = outlineColor;
         chartInstances[`chart_${i}`].data.datasets[0].pointBackgroundColor = outlineColor;
 
+
         // Update the tooltip and other visual aspects
+        chartInstances[`chart_${i}`].options.plugins.tooltip.callbacks.label = function(context) {
+            return `${context.raw} ${param}`;
+        };
         chartInstances[`chart_${i}`].options.plugins.tooltip.borderColor = outlineColor;
         chartInstances[`chart_${i}`].options.plugins.tooltip.titleColor = outlineColor;
 
@@ -174,6 +178,20 @@ function displayCharts(player1SeasonData, player2SeasonData, params) {
     displayChart(2, player2SeasonData, maxParam, params[1]);
 }
 
+function updateTextColor(i, cardColor) {
+    const playerNameElement = document.getElementById(`player_${i}_name`);
+    const playerPositionElement = document.getElementById(`player_${i}_position`);
+    const playerTeamElement = document.getElementById(`player_${i}_club`);
+    
+    // Get outline color based on luminance of card background color
+    const textColor = getOutlineColorBasedOnLuminance(cardColor);
+
+    // Update the text color
+    playerNameElement.style.color = textColor;
+    playerPositionElement.style.color = textColor;
+    playerTeamElement.style.color = textColor;
+}
+
 function displayChart(i, seasonData, maxParam, param) {
     let card = document.getElementById(`player_${i}_card`);
 
@@ -183,19 +201,23 @@ function displayChart(i, seasonData, maxParam, param) {
 
     // Initial chart render
     let initialCardColor = window.getComputedStyle(card).backgroundColor;
+    updateTextColor(i, initialCardColor); // Set the text color based on initial background color
     updateChart(i, initialCardColor, seasonData, maxParam, param);
 
     // Event listeners for hover to change chart color dynamically
     card.addEventListener('mouseover', function() {
         let hoverCardColor = window.getComputedStyle(card).backgroundColor;
+        updateTextColor(i, hoverCardColor); // Update text color when hovered
         updateChart(i, hoverCardColor, seasonData, maxParam, param); // Update chart with hover color
     });
 
     card.addEventListener('mouseout', function() {
         let originalCardColor = window.getComputedStyle(card).backgroundColor;
+        updateTextColor(i, originalCardColor); // Revert text color when mouse out
         updateChart(i, originalCardColor, seasonData, maxParam, param); // Revert chart to original color
     });
 }
+
 
 // Add event listeners to dropdowns
 function setupDropdownListeners(player1SeasonData, player2SeasonData, params) {

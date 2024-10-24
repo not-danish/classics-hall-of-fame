@@ -62,14 +62,23 @@ cache_expiry_time = 300
 def update_cache():
     while True:
         current_time = time.time()
-        # Remove expired cache entries
+
+        # Initialize the Cache
         if player_cache['time'] == None:
+
             random_elo = random.randint(1300,1700)
             player_cache['data'] = fetch_players_by_elo(random_elo - 50, random_elo + 50, limit = 50)
             player_cache['time'] = current_time
+        # Cache has expired, update the firebase db with respective changes and fetch new players into the cache
         else:
             if current_time - player_cache['time'] > cache_expiry_time:
-                #firebase_db.update(cache_updates)
+                
+                # Updating the db
+                firebase_db.update(cache_updates)
+                print("Updated players")
+                print(cache_updates)
+                
+                # Fetch new players
                 random_elo = random.randint(1300,1700)
                 player_cache['data'] = fetch_players_by_elo(random_elo - 50, random_elo + 50, limit = 50)
 
@@ -90,24 +99,33 @@ threading.Thread(target=update_cache, daemon=True).start()
 def cached_players():
     return jsonify(player_cache['data'])
 
+
+@app.route('/api/cache_updates')
+def cache_needing_to_be_updated():
+    return jsonify(cache_updates)
+
 @app.route('/api/leaderboard')
 def test():
     return jsonify(fetch_players_by_elo(1401,1760, limit = 50))
 
 @app.route('/api/update_data', methods = ["POST"])
 def update_data():
-    data = request.json()
-    player_id = data.get('player_id')
-    new_elo = data.get('new_elo')
+    data = request.get_json()
+    winning_id = data.get('player_id')
+    winning_elo = data.get('new_elo')
+    losing_id = data.get('losing_id')
+    losing_elo = data.get('losing_elo')
 
-    if not player_id or new_elo is None:
+    print(winning_elo)
+
+    updated_elos = elo.calculate_elo(winning_elo, losing_elo)
+
+    if not winning_id or not winning_elo or not losing_id or not losing_elo:
         return jsonify({"error": "Invalid data"}), 400
 
     # Update player data in the cache_updates dictionary
-    cache_updates[f'data/players/{player_id}/ELO'] = new_elo
-
-    # Update player data in the player_cache dict
-    player_cache['data'][player_id]['ELO'] = new_elo
+    cache_updates[f'data/players/{winning_id}/ELO'] = updated_elos[0]
+    cache_updates[f'data/players/{losing_id}/ELO'] = updated_elos[1]
 
     return jsonify({"message": "Player data updated successfully"}), 200
 
@@ -155,6 +173,7 @@ def rank():
 @app.route('/leaderboard')
 def leaderboard():
     return render_template("leaderboard.html")
+
 
 
 app.run(
