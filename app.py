@@ -60,29 +60,34 @@ cache_expiry_time = 300
 
 # Updates cache with new player data every 5 minutes
 def update_cache():
+    global cache_updates 
+    
     while True:
         current_time = time.time()
 
         # Initialize the Cache
-        if player_cache['time'] == None:
-
-            random_elo = random.randint(1300,1700)
-            player_cache['data'] = fetch_players_by_elo(random_elo - 50, random_elo + 50, limit = 50)
+        if player_cache['time'] is None:
+            random_elo = random.randint(1300, 1700)
+            player_cache['data'] = fetch_players_by_elo(random_elo - 50, random_elo + 50, limit=50)
             player_cache['time'] = current_time
+
         # Cache has expired, update the firebase db with respective changes and fetch new players into the cache
         else:
             if current_time - player_cache['time'] > cache_expiry_time:
                 
                 # Updating the db
-                firebase_db.update(cache_updates)
-                print("Updated players")
-                print(cache_updates)
+                if cache_updates:
+                    firebase_db.update(cache_updates)
+                    print("Updated players")
+                    print(cache_updates)
+                    cache_updates = {}  # Reset cache_updates after update
                 
                 # Fetch new players
-                random_elo = random.randint(1300,1700)
-                player_cache['data'] = fetch_players_by_elo(random_elo - 50, random_elo + 50, limit = 50)
+                random_elo = random.randint(1300, 1700)
+                player_cache['data'] = fetch_players_by_elo(random_elo - 50, random_elo + 50, limit=100)
 
         time.sleep(60)  # Check every minute
+
 
 threading.Thread(target=update_cache, daemon=True).start()
 
@@ -110,15 +115,27 @@ def test():
 
 @app.route('/api/update_data', methods = ["POST"])
 def update_data():
+    global cache_updates
     data = request.get_json()
-    winning_id = data.get('player_id')
-    winning_elo = data.get('new_elo')
+    winning_id = data.get('winning_id')
+    winning_elo = data.get('winning_elo')
     losing_id = data.get('losing_id')
     losing_elo = data.get('losing_elo')
 
-    print(winning_elo)
+    print(f"winning: {winning_id}, {winning_elo}, losing: {losing_id}, {losing_elo}")
+
+
+    if f'data/players/{winning_id}/ELO' in cache_updates:
+        winning_elo = cache_updates[f'data/players/{winning_id}/ELO']
+        print("gerfwedgbhn")
+
+    if f'data/players/{losing_id}/ELO' in cache_updates:
+        losing_elo = cache_updates[f'data/players/{losing_id}/ELO']
+        print("gerwedqdghg")
 
     updated_elos = elo.calculate_elo(winning_elo, losing_elo)
+    print(winning_elo, updated_elos[0])
+    print(losing_elo, updated_elos[1])
 
     if not winning_id or not winning_elo or not losing_id or not losing_elo:
         return jsonify({"error": "Invalid data"}), 400
@@ -133,6 +150,8 @@ def update_data():
 def new_elo():
     winning_player = request.args.get("winning_player")
     losing_player = request.args.get("losing_player")
+
+    print("bgvfcdx")
 
     old_elo_win = player_cache['data'][winning_player]['ELO']
     old_elo_loss = player_cache['data'][losing_player]['ELO']

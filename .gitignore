@@ -2,3 +2,5 @@ footy-legends-firebase-adminsdk-rg57n-b580316984.json
 football-rank-aaa71-firebase-adminsdk-mqfwe-9837c1d800.json
 .env
 .DS_Store
+/node_modules
+__pycache__/elo.cpython-311.pyc

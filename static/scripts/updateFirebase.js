@@ -88,14 +88,16 @@ async function displayPlayers() {
 
             // Add click event listener to player card for POST request
             playerCardElement.addEventListener('click', () => {
+                const losingPlayer = ithPlayer === playerData[0] ? playerData[1] : playerData[0];
                 const dataToSend = {
                     winning_id: ithPlayer[0],
                     winning_elo: ithPlayer[1].ELO,
-                    losing_id: playerData[(i+1)%2][0],
-                    losing_elo: playerData[(i+1)%2][1].ELO
+                    losing_id: losingPlayer[0],
+                    losing_elo: losingPlayer[1].ELO
                 }
                 sendCacheUpdate(dataToSend);  // Call function to send POST request
             });
+
 
             // onHover event listeners
             playerCardElement.addEventListener('mouseover', () => {
@@ -134,7 +136,6 @@ async function sendCacheUpdate(dataToSend) {
         });
 
         const result = await response.json();
-        console.log(result); // Log the response from the server
     } catch (error) {
         console.error('Error sending cache update:', error);
     }
