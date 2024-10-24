@@ -92,7 +92,7 @@ def cached_players():
 
 @app.route('/api/leaderboard')
 def test():
-    return jsonify(fetch_players_by_elo(1401,1760, limit = 10))
+    return jsonify(fetch_players_by_elo(1401,1760, limit = 50))
 
 @app.route('/api/update_data', methods = ["POST"])
 def update_data():

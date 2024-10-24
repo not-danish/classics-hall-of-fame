@@ -32,9 +32,9 @@ function adjustBrightness(color, percent) {
     return `rgb(${r}, ${g}, ${b})`;
 }
 
-function updateChart(i, cardColor, seasonData, maxGoals) {
+function updateChart(i, cardColor, seasonData, maxParam, param) {
     const seasons = seasonData.map(season => season.seasonName).reverse();
-    const goals = seasonData.map(season => season.goals).reverse();
+    const paramValues = seasonData.map(season => season[param] === 'NaN' ? '0' : season[param]).reverse();
 
     var canvas = document.getElementById(`player_${i}_chart`);
 
@@ -53,9 +53,8 @@ function updateChart(i, cardColor, seasonData, maxGoals) {
 
     // Check if the chart already exists
     if (chartInstances[`chart_${i}`]) {
-        // Update the chart's datasets and properties
         chartInstances[`chart_${i}`].data.labels = seasons; // Update the labels (season names)
-        chartInstances[`chart_${i}`].data.datasets[0].data = goals; // Update the goals data
+        chartInstances[`chart_${i}`].data.datasets[0].data = paramValues; // Update the data for the selected parameter
         chartInstances[`chart_${i}`].data.datasets[0].backgroundColor = gradient;
         chartInstances[`chart_${i}`].data.datasets[0].borderColor = outlineColor;
         chartInstances[`chart_${i}`].data.datasets[0].pointBackgroundColor = outlineColor;
@@ -65,7 +64,7 @@ function updateChart(i, cardColor, seasonData, maxGoals) {
         chartInstances[`chart_${i}`].options.plugins.tooltip.titleColor = outlineColor;
 
         // Set the same max value for the y-axis in both charts
-        chartInstances[`chart_${i}`].options.scales.y.max = maxGoals;
+        chartInstances[`chart_${i}`].options.scales.y.max = maxParam;
 
         // Force chart to update with the new colors and data
         chartInstances[`chart_${i}`].update();
@@ -76,8 +75,8 @@ function updateChart(i, cardColor, seasonData, maxGoals) {
             data: {
                 labels: seasons,
                 datasets: [{
-                    label: 'Goals',
-                    data: goals,
+                    label: param,
+                    data: paramValues,
                     fill: true,
                     backgroundColor: gradient,
                     borderColor: outlineColor,
@@ -103,7 +102,7 @@ function updateChart(i, cardColor, seasonData, maxGoals) {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max: maxGoals,  // Set the max value for the y-axis
+                        max: maxParam,  // Set the max value for the y-axis
                         grid: {
                             display: false
                         },
@@ -123,6 +122,10 @@ function updateChart(i, cardColor, seasonData, maxGoals) {
                             color: '#a0aec0',
                             font: {
                                 size: 12
+                            },
+                            // Show only every nth label
+                            callback: function(value, index) {
+                                return index % 2 === 0 ? this.getLabelForValue(value) : ''; // Show every 2nd label
                             }
                         }
                     }
@@ -145,7 +148,7 @@ function updateChart(i, cardColor, seasonData, maxGoals) {
                         cornerRadius: 10,
                         callbacks: {
                             label: function(context) {
-                                return `${context.raw} Goals`;
+                                return `${context.raw} ${param}`;
                             },
                             title: function(tooltipItems) {
                                 return `Season ${tooltipItems[0].label}`;
@@ -161,19 +164,17 @@ function updateChart(i, cardColor, seasonData, maxGoals) {
     }
 }
 
-function displayCharts(player1SeasonData, player2SeasonData) {
-    const player1Goals = player1SeasonData.map(season => season.goals);
-    const player2Goals = player2SeasonData.map(season => season.goals);
+function displayCharts(player1SeasonData, player2SeasonData, params) {
+    const player1Param = player1SeasonData.map(season => season[params[0]]);
+    const player2Param = player2SeasonData.map(season => season[params[1]]);
 
-    // Calculate the maximum goals between both players
-    const maxGoals = Math.max(...player1Goals, ...player2Goals) + 2;
+    const maxParam = Math.max(...player1Param, ...player2Param) + 5;
 
-    // Render charts with the same max value for the y-axis
-    displayChart(1, player1SeasonData, maxGoals);
-    displayChart(2, player2SeasonData, maxGoals);
+    displayChart(1, player1SeasonData, maxParam, params[0]);
+    displayChart(2, player2SeasonData, maxParam, params[1]);
 }
 
-function displayChart(i, seasonData, maxGoals) {
+function displayChart(i, seasonData, maxParam, param) {
     let card = document.getElementById(`player_${i}_card`);
 
     if (!card) {
@@ -182,18 +183,31 @@ function displayChart(i, seasonData, maxGoals) {
 
     // Initial chart render
     let initialCardColor = window.getComputedStyle(card).backgroundColor;
-    updateChart(i, initialCardColor, seasonData, maxGoals);
+    updateChart(i, initialCardColor, seasonData, maxParam, param);
 
     // Event listeners for hover to change chart color dynamically
     card.addEventListener('mouseover', function() {
         let hoverCardColor = window.getComputedStyle(card).backgroundColor;
-        updateChart(i, hoverCardColor, seasonData, maxGoals); // Update chart with hover color
+        updateChart(i, hoverCardColor, seasonData, maxParam, param); // Update chart with hover color
     });
 
     card.addEventListener('mouseout', function() {
         let originalCardColor = window.getComputedStyle(card).backgroundColor;
-        updateChart(i, originalCardColor, seasonData, maxGoals); // Revert chart to original color
+        updateChart(i, originalCardColor, seasonData, maxParam, param); // Revert chart to original color
     });
 }
 
-export { displayCharts };
+// Add event listeners to dropdowns
+function setupDropdownListeners(player1SeasonData, player2SeasonData, params) {
+    for (let i = 1; i <= 2; i++) {
+        const dropdown = document.getElementById(`player_${i}_stat_dropdown`);
+        dropdown.addEventListener('change', function() {
+            const selectedStat = dropdown.value; // Get the selected stat
+            params[i-1] = selectedStat; 
+            displayCharts(player1SeasonData, player2SeasonData, params); // Update charts for both players with the same stat
+        });
+    }
+}
+
+export { displayCharts, setupDropdownListeners };
+

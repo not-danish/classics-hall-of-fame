@@ -1,4 +1,4 @@
-import { displayCharts } from "./playerData.js";
+import { displayCharts, setupDropdownListeners } from "./playerData.js";
 
 async function getCachedPlayers() {
     try {
@@ -101,7 +101,10 @@ async function displayPlayers() {
         }
 
         // After processing both players, display the charts with the same y-axis max value
-        displayCharts(seasonDataForBothPlayers[0], seasonDataForBothPlayers[1]);
+        displayCharts(seasonDataForBothPlayers[0], seasonDataForBothPlayers[1], ['appearances', 'appearances']);
+        setupDropdownListeners(seasonDataForBothPlayers[0], seasonDataForBothPlayers[1], ['appearances','appearances']);
+
+
 
         return [cachedPlayers[firstIndex], cachedPlayers[secondIndex]];
     }
