@@ -169,8 +169,8 @@ function updateChart(i, cardColor, seasonData, maxParam, param) {
 }
 
 function displayCharts(player1SeasonData, player2SeasonData, params) {
-    const player1Param = player1SeasonData.map(season => season[params[0]]);
-    const player2Param = player2SeasonData.map(season => season[params[1]]);
+    const player1Param = player1SeasonData.map(season => isNaN(season[params[0]]) ? 0 : season[params[0]] );    
+    const player2Param = player2SeasonData.map(season => isNaN(season[params[1]]) ? 0 : season[params[1]]);
 
     const maxParam = Math.max(...player1Param, ...player2Param) + 5;
 

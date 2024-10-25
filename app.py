@@ -73,8 +73,8 @@ def update_cache():
 
         # Cache has expired, update the firebase db with respective changes and fetch new players into the cache
         else:
+            print(current_time = player_cache['time'])
             if current_time - player_cache['time'] > cache_expiry_time:
-                
                 # Updating the db
                 if cache_updates:
                     firebase_db.update(cache_updates)
@@ -127,11 +127,9 @@ def update_data():
 
     if f'data/players/{winning_id}/ELO' in cache_updates:
         winning_elo = cache_updates[f'data/players/{winning_id}/ELO']
-        print("gerfwedgbhn")
 
     if f'data/players/{losing_id}/ELO' in cache_updates:
         losing_elo = cache_updates[f'data/players/{losing_id}/ELO']
-        print("gerwedqdghg")
 
     updated_elos = elo.calculate_elo(winning_elo, losing_elo)
     print(winning_elo, updated_elos[0])
@@ -151,7 +149,6 @@ def new_elo():
     winning_player = request.args.get("winning_player")
     losing_player = request.args.get("losing_player")
 
-    print("bgvfcdx")
 
     old_elo_win = player_cache['data'][winning_player]['ELO']
     old_elo_loss = player_cache['data'][losing_player]['ELO']

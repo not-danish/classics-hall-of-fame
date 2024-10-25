@@ -37,7 +37,6 @@ async function displayPlayers() {
 
         for (var i = 0; i < 2; i++) {
             const ithPlayer = playerData[i];
-            console.log(ithPlayer);
             const playerApiId = ithPlayer[1]?.player_api_id;
             const playerImgSrc = `https://images.fotmob.com/image_resources/playerimages/${playerApiId}.png`;
 
@@ -115,10 +114,16 @@ async function displayPlayers() {
         }
 
         // After processing both players, display the charts with the same y-axis max value
-        displayCharts(seasonDataForBothPlayers[0], seasonDataForBothPlayers[1], ['appearances', 'appearances']);
+        const params = ['appearances',
+                        'appearances'
+        ];
+
+
+        displayCharts(seasonDataForBothPlayers[0], seasonDataForBothPlayers[1], params);
 
         // Call setupDropdownListeners here after rendering the players and charts
-        setupDropdownListeners(seasonDataForBothPlayers[0], seasonDataForBothPlayers[1]);
+        console.log(seasonDataForBothPlayers);
+        setupDropdownListeners(seasonDataForBothPlayers[0], seasonDataForBothPlayers[1], params);
 
         return [cachedPlayers[firstIndex], cachedPlayers[secondIndex]];
     }
