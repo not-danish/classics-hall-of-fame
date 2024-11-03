@@ -30,19 +30,59 @@ initialize_app(cred, {'databaseURL': os.getenv('DATABASE_URL')})
 # Get a reference to the Firebase Realtime Database
 firebase_db = db.reference()
 
+
+### Fetches the amount of players in a given elo range as the limit. 
+### Will incrementally increase the elo radius if there's not enough players
 def fetch_players_by_elo(min_elo, max_elo, **kwargs):
     limit = kwargs.get('limit', None)
     players_ref = db.reference('data/players')
+    players_data = []
 
+    # Initial fetch within the specified ELO range
     if limit:
         players_data = players_ref.order_by_child('ELO').start_at(min_elo).end_at(max_elo).limit_to_last(limit).get()
     else:
         players_data = players_ref.order_by_child('ELO').start_at(min_elo).end_at(max_elo).get()
 
-    # Convert to a list and sort it in descending order by ELO
-    sorted_players = sorted(players_data.items(), key=lambda x: x[1].get('ELO', 0), reverse=True)
+    # Check if players_data is None and initialize it as an empty dictionary if so
+    if players_data is None:
+        players_data = {}
 
+    players_data = list(players_data.items())
+    player_count = len(players_data)
+
+    # Expand search range if needed to fulfill the limit
+    step = 50  # Define a step size to expand the range gradually
+    while player_count < limit:
+        # Expand the range on both sides
+        min_elo -= step
+        max_elo += step
+        
+        # Fetch additional players in the new range
+        expanded_data = players_ref.order_by_child('ELO').start_at(min_elo).end_at(max_elo).get()
+        
+        # Check if expanded_data is None and initialize it as an empty dictionary if so
+        if expanded_data is None:
+            expanded_data = {}
+
+        expanded_data = list(expanded_data.items())
+        
+        # Add only new players to avoid duplicates
+        new_players = [player for player in expanded_data if player not in players_data]
+        players_data.extend(new_players)
+        
+        # Update the count
+        player_count = len(players_data)
+        
+        # If no new players are found, break to avoid infinite loop
+        if not new_players:
+            break
+
+    # Sort all fetched players by ELO in descending order
+    sorted_players = sorted(players_data, key=lambda x: x[1].get('ELO', 0), reverse=True)
+    
     return sorted_players[:limit]  # Return the top N players
+
 
 
 '''
@@ -67,14 +107,15 @@ def update_cache():
 
         # Initialize the Cache
         if player_cache['time'] is None:
-            random_elo = random.randint(1300, 1700)
-            player_cache['data'] = fetch_players_by_elo(random_elo - 50, random_elo + 50, limit=50)
+            random_elo = random.randint(1350, 1405)
+            print(random_elo)
+            player_cache['data'] = fetch_players_by_elo(random_elo - 50, random_elo + 50, limit=100)
             player_cache['time'] = current_time
 
         # Cache has expired, update the firebase db with respective changes and fetch new players into the cache
         else:
-            print(current_time = player_cache['time'])
             if current_time - player_cache['time'] > cache_expiry_time:
+                print(current_time - player_cache['time'])
                 # Updating the db
                 if cache_updates:
                     firebase_db.update(cache_updates)
@@ -84,6 +125,7 @@ def update_cache():
                 
                 # Fetch new players
                 random_elo = random.randint(1300, 1700)
+                print(random_elo)
                 player_cache['data'] = fetch_players_by_elo(random_elo - 50, random_elo + 50, limit=100)
 
         time.sleep(60)  # Check every minute
@@ -111,7 +153,7 @@ def cache_needing_to_be_updated():
 
 @app.route('/api/leaderboard')
 def test():
-    return jsonify(fetch_players_by_elo(1401,1760, limit = 50))
+    return jsonify(fetch_players_by_elo(1000,1399, limit = 300))
 
 @app.route('/api/update_data', methods = ["POST"])
 def update_data():
@@ -166,6 +208,7 @@ def new_elo():
 def detailed_data():
     player_api_id = request.args.get('player_api_id')
     data_link = f'https://www.fotmob.com/api/playerData?id={player_api_id}'
+    print(data_link)
     data = requests.get(data_link).text
 
     return json.loads(data)

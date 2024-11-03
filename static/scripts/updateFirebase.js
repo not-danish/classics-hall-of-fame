@@ -35,7 +35,7 @@ async function displayPlayers() {
         const playerData = [cachedPlayers[firstIndex], cachedPlayers[secondIndex]];
         const seasonDataForBothPlayers = [];
 
-        for (var i = 0; i < 2; i++) {
+        for (let i = 0; i < 2; i++) {
             const ithPlayer = playerData[i];
             const playerApiId = ithPlayer[1]?.player_api_id;
             const playerImgSrc = `https://images.fotmob.com/image_resources/playerimages/${playerApiId}.png`;
@@ -64,8 +64,12 @@ async function displayPlayers() {
             const playerImageElement = document.getElementById(`player_${i + 1}_image`);
             const playerNameElement = document.getElementById(`player_${i + 1}_name`);
             const playerCardElement = document.getElementById(`player_${i + 1}_card`);
+            const otherPlayerCardElement = document.getElementById(`player_${(i === 0 ? 2 : 1)}_card`);
+
             const playerPositionElement = document.getElementById(`player_${i + 1}_position`);
             const playerTeamElement = document.getElementById(`player_${i + 1}_club`);
+
+            const test = document.getElementById('test');
 
             // Getting Detailed Data and using it
             const detailedData = await getDetailedPlayer(playerApiId);
@@ -77,6 +81,8 @@ async function displayPlayers() {
                 this.src = 'https://cdn.sofifa.net/player_0.svg'; // Set default image URL
             };
             playerImageElement.src = playerImgSrc;
+
+
 
             playerNameElement.innerHTML = `${ithPlayer[1]?.player_name || 'Player'} ${rank}`;   
             playerNameElement.style.color = 'white';
@@ -93,10 +99,21 @@ async function displayPlayers() {
                     winning_elo: ithPlayer[1].ELO,
                     losing_id: losingPlayer[0],
                     losing_elo: losingPlayer[1].ELO
-                }
+                };
                 sendCacheUpdate(dataToSend);  // Call function to send POST request
-            });
 
+                // Adding fade-out effect 
+                playerCardElement.classList.replace('animate__slower', 'animate__fast');
+                otherPlayerCardElement.classList.replace('animate__slower', 'animate__fast');
+
+                playerCardElement.classList.add('animate__fadeOut');
+                otherPlayerCardElement.classList.add('animate__fadeOut');
+
+                test.classList.toggle('opacity-100');
+
+                
+
+            });
 
             // onHover event listeners
             playerCardElement.addEventListener('mouseover', () => {
@@ -114,20 +131,16 @@ async function displayPlayers() {
         }
 
         // After processing both players, display the charts with the same y-axis max value
-        const params = ['appearances',
-                        'appearances'
-        ];
-
-
+        const params = ['appearances', 'appearances'];
         displayCharts(seasonDataForBothPlayers[0], seasonDataForBothPlayers[1], params);
 
         // Call setupDropdownListeners here after rendering the players and charts
-        console.log(seasonDataForBothPlayers);
         setupDropdownListeners(seasonDataForBothPlayers[0], seasonDataForBothPlayers[1], params);
 
         return [cachedPlayers[firstIndex], cachedPlayers[secondIndex]];
     }
 }
+
 
 // Function to send POST request to /api/cache_updates
 async function sendCacheUpdate(dataToSend) {
